@@ -17,4 +17,4 @@ Three files are shown: the one with extension .XML with basic specifications, an
 Now RIGHT CLICK the project in the Project Panel and hit "Open in Player".
 ![image](https://github.com/user-attachments/assets/ce2c3ad3-5894-4a07-822b-a6527423a368)
 
-If the simulation does not run immediately, press the "Play" button.
+If the simulation does not run immediately, press the "Play" button in the Player. 
