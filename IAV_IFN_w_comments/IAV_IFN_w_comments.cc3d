@@ -1,0 +1,5 @@
+<Simulation version="4.4.1">
+   <XMLScript Type="XMLScript">Simulation/Viral_Replication_Model.xml</XMLScript>
+   <PythonScript Type="PythonScript">Simulation/Viral_Replication_Model.py</PythonScript>
+   <Resource Type="Python">Simulation/Viral_Replication_ModelSteppables.py</Resource>
+</Simulation>

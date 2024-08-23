@@ -1,0 +1,139 @@
+<!-- 
+This file sets basic settings like lattice size, initialize cells, field constants etc.
+Read through the comments to understand. The comments are inside brackets with an
+exclamation mark "!"
+ -->
+
+<CompuCell3D Revision="6" Version="4.4.1">
+   
+   <Metadata>
+      <NumberOfProcessors>8</NumberOfProcessors>
+      <DebugOutputFrequency>10</DebugOutputFrequency>
+   </Metadata>
+   
+   <Potts>
+      
+      <!-- 
+      Basic properties of CPM (GGH) algorithm. Temperature regulates cell membrane
+      fluctuation. Periodic boundary conditions let cells cross lattice edges to the
+      other side. Steps set the simulation total time.
+      -->
+      <Dimensions x="300" y="300" z="1"/>
+      <Steps>1000</Steps>
+      <Temperature>10.0</Temperature>
+      <NeighborOrder>1</NeighborOrder>
+      <Boundary_x>Periodic</Boundary_x>
+      <Boundary_y>Periodic</Boundary_y>
+      <RandomSeed>10</RandomSeed>
+   </Potts>
+   
+   <Plugin Name="CellType">
+      
+      <!-- 
+      Listing all cell types in the simulation. U for uninfected, I for infected,
+      E for exposed and D for dead.
+      -->
+      <CellType TypeId="0" TypeName="Medium"/>
+      <CellType TypeId="1" TypeName="U"/>
+      <CellType TypeId="2" TypeName="I"/>
+      <CellType TypeId="3" TypeName="E"/>
+      <CellType TypeId="4" TypeName="D"/>
+   </Plugin>
+   
+   <Plugin Name="Volume"/>
+   
+   <Plugin Name="CenterOfMass">
+      
+      <!-- Module tracking center of mass of each cell -->
+   </Plugin>
+   
+   <Plugin Name="NeighborTracker">
+      
+      <!-- Module tracking neighboring cells of each cell -->
+   </Plugin>
+   
+<Plugin Name="Contact">
+   <!-- Specification of adhesion energies. This is not important for the model -->
+   <Energy Type1="Medium" Type2="Medium">10.0</Energy>
+   <Energy Type1="Medium" Type2="U">10.0</Energy>
+   <Energy Type1="Medium" Type2="I">10.0</Energy>
+   <Energy Type1="Medium" Type2="E">10.0</Energy>
+   <Energy Type1="Medium" Type2="D">10.0</Energy>
+   <Energy Type1="U" Type2="U">20.0</Energy>
+   <Energy Type1="U" Type2="I">20.0</Energy>
+   <Energy Type1="U" Type2="E">20.0</Energy>
+   <Energy Type1="U" Type2="D">20.0</Energy>
+   <Energy Type1="I" Type2="I">20.0</Energy>
+   <Energy Type1="I" Type2="E">20.0</Energy>
+   <Energy Type1="I" Type2="D">20.0</Energy>
+   <Energy Type1="E" Type2="E">20.0</Energy>
+   <Energy Type1="E" Type2="D">20.0</Energy>
+   <Energy Type1="D" Type2="D">20.0</Energy>
+   <NeighborOrder>2</NeighborOrder>
+</Plugin>
+   
+   <Plugin Name="Secretion">
+      <!-- Specification of secretion properties is done in Python -->
+   </Plugin>
+   
+   <Steppable Type="DiffusionSolverFE">
+      
+      <!-- 
+      Specification of PDE solvers. Here I set coefficients of diffusion, decay and periodic
+      boundary conditions of the virus and IFN fields.
+      -->
+      <DiffusionField Name="virus">
+         <DiffusionData>
+            <FieldName>virus</FieldName>
+            <GlobalDiffusionConstant>0.1</GlobalDiffusionConstant>
+            <!-- approximately 6 um^2/h, 0.63 pixel^2/MCS in mucus -->
+            <!-- estimated from https://www.nature.com/articles/s42003-022-03204-3 -->
+            <!-- look at the list pedro document for more details on this estimate -->
+            <GlobalDecayConstant>0.0031</GlobalDecayConstant>
+            <!-- <InitialConcentrationExpression>5*(x==149)*(y==149)</InitialConcentrationExpression> -->
+            <!-- <InitialConcentrationExpression>1</InitialConcentrationExpression> -->
+         </DiffusionData>
+         <BoundaryConditions>
+            <Plane Axis="X">
+               <Periodic/>
+            </Plane>
+            <Plane Axis="Y">
+               <Periodic/>
+            </Plane>
+         </BoundaryConditions>
+      </DiffusionField>
+      <DiffusionField Name="IFN">
+         <DiffusionData>
+            <FieldName>IFN</FieldName>
+            <GlobalDiffusionConstant>0.1</GlobalDiffusionConstant>
+            <!-- D=31 pixels^2/MCS, estimate from hydrodynamic radius and in mucus -->
+            <!-- 54h of relaxation time, 6mcs per hour, 324 relax time, decay=0.0031 -->
+            <GlobalDecayConstant>0.0031</GlobalDecayConstant>
+            <!-- <InitialConcentrationExpression>200</InitialConcentrationExpression> -->
+         </DiffusionData>
+         <BoundaryConditions>
+            <Plane Axis="X">
+               <Periodic/>
+            </Plane>
+            <Plane Axis="Y">
+               <Periodic/>
+            </Plane>
+         </BoundaryConditions>
+      </DiffusionField>
+   </Steppable>
+   
+   <Steppable Type="UniformInitializer">
+      
+      <!-- 
+      Initial layout of cells in the form of rectangular slab that fills out the
+      entire lattice
+      -->
+      <Region>
+         <BoxMin x="0" y="0" z="0"/>
+         <BoxMax x="300" y="300" z="1"/>
+         <Gap>0</Gap>
+         <Width>7</Width>
+         <Types>U</Types>
+      </Region>
+   </Steppable>
+</CompuCell3D>
