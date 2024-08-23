@@ -9,6 +9,7 @@ Download the simulation folder. Open it in twedit by going to CC3D Project > Ope
 ![image](https://github.com/user-attachments/assets/96b19d84-e8f0-4010-8a45-3f87f869ddc7)
 
 Double click the project in the Projects Panel
+
 <img width="171" alt="image" src="https://github.com/user-attachments/assets/34fbb011-6945-46b9-b746-0ec0b64217a0">
 
 Three files are shown: the one with extension .XML with basic specifications, and two with extension .py. The last python file, called "steppables", contains most of the mechanisms governing the simulation.
